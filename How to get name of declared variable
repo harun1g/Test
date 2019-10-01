@@ -1,0 +1,106 @@
+#include <iostream>
+#include<bits/stdc++.h>
+typedef std::vector<std::vector<double>> Matrica;
+
+class Matrica_Klasa
+{
+    Matrica mat;
+    int br_kolona,br_redova;
+
+    int Podstring(std::string s,std::string trazeni)
+    {
+        for(int i=0; i<s.length(); i++) {
+            int k=0,pocetak=i;
+            while(s.at(i)==trazeni.at(k)) {
+                k++;
+                if(k==trazeni.length()-1)
+                    return pocetak;
+                i++;
+            }
+        }
+        return -1;
+    }
+public:
+
+    Matrica_Klasa(int red,int kol);
+    
+    void PostaviElemente();
+
+    void IspisiElemente () const ;
+
+    std::string DajImeMatrice();
+
+};
+
+std::string Matrica_Klasa::DajImeMatrice()
+{
+    static int brojac=0;
+    int provjera_brojaca=0;
+    std::string  red_datoteke,ime;
+    std::ifstream ulazni_tok("main.cpp");
+    brojac++;
+    while(std::getline(ulazni_tok, red_datoteke)) {
+
+        int p=Podstring(red_datoteke,".DajImeMatrice()");
+        if(p!=-1 && red_datoteke.at(p-1)!='"') {
+            provjera_brojaca++;
+            if(brojac==provjera_brojaca) {
+                p--;
+                while (red_datoteke.at(p) == ' ' ) p--;
+                while (((red_datoteke.at(p)>='a' && red_datoteke.at(p)<='z') ||
+                        (red_datoteke.at(p)>='A' && red_datoteke.at(p)<='Z') ||
+                        (red_datoteke.at(p)>='0' && red_datoteke.at(p)<='9') || red_datoteke.at(p)=='_')) p--;
+                for (;;) {
+                    p++;
+                    if (red_datoteke.at(p) == ' '  || red_datoteke.at(p) == '.') break;
+                    ime.push_back(red_datoteke.at(p));
+                }
+                return ime;
+            }
+        }
+    }
+    return "";
+}
+
+void Matrica_Klasa::IspisiElemente () const
+{
+    for(int i=0; i<br_redova; i++) {
+        for(int j=0; j<br_kolona; j++) {
+            std::cout<<std::setw(3)<<mat.at(i).at(j);
+        }
+        std::cout<<"\n";
+    }
+}
+
+Matrica_Klasa::Matrica_Klasa(int red,int kol)
+{
+    br_redova=red;
+    br_kolona=kol;
+    mat=Matrica(red, std::vector<double>(kol));
+}
+
+void Matrica_Klasa::PostaviElemente()
+{
+    for(int i=0; i<br_redova; i++) {
+        for(int j=0; j<br_kolona; j++) {
+            std::cout<<"Element ["<<i+1<<"]["<<j+1<<"] : ";
+            std::cin>>mat.at(i).at(j);
+        }
+    }
+}
+
+int main()
+{
+    Matrica_Klasa matA(2,2);
+    std::cout<<"Unesite elemente za matricu "<<matA.DajImeMatrice()<<" : \n";
+    matA.PostaviElemente();
+    
+    Matrica_Klasa matricaB(2,2);
+    std::cout<<"Unesite elemente za matricu "<<matricaB.DajImeMatrice()<<" : \n";
+    matricaB.PostaviElemente(); 
+    
+    std::cout<<matA.DajImeMatrice()<<" glasi : \n"; matA.IspisiElemente();
+    std::cout<<matricaB.DajImeMatrice()<<" glasi : \n"; matricaB.IspisiElemente();
+
+    return 0;
+}
